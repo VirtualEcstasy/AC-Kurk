@@ -18,7 +18,7 @@ let currentSlideIndex = 0;
 let slideInterval;
 
 // ============================================================
-// 2. VERİ MOTORU (GELİŞMİŞ - VİRGÜL VE SÜTUN HATALARINI AFFEDER)
+// 2. VERİ MOTORU (TEMİZLİK ROBOTU MODU - AKTİF)
 // ============================================================
 async function verileriGetir() {
     if (isDataLoaded) return;
@@ -32,44 +32,49 @@ async function verileriGetir() {
         const sliderData = await sliderRes.text();
         const corpData = await corpRes.text();
 
-        // --- A. Ürünleri İşle (Virgül ve Tırnak Temizliği) ---
+        // --- A. Ürünleri İşle ---
         prodData.split('\n').slice(1).forEach(row => {
             const p = row.split(',');
-            // Satırın en azından Kategori ve Başlık içerdiğinden emin ol
             if (p.length >= 3 && p[0].trim() !== "") {
                 const k = p[0].trim();
                 if (!urunVerileri[k]) urunVerileri[k] = [];
                 
-                // Resim her zaman son sütundadır
                 const resimYolu = p[p.length - 1].replace(/\r/g, "").trim();
                 
-                // Açıklama: Başlık (Index 1) ile Resim (Son Index) arasındaki her şeydir.
+                // Açıklama Temizliği
                 let aciklama = p.slice(2, p.length - 1).join(',');
-                aciklama = aciklama.replace(/^"|"$/g, '').replace(/""/g, '"').trim();
+                aciklama = aciklama
+                    .replace(/^"|"$/g, '')    // Dış tırnakları sil
+                    .replace(/""/g, '"')      // Çift tırnakları düzelt
+                    .replace(/^,\s*/, '')     // BAŞTAKİ VİRGÜLÜ SİL
+                    .replace(/,\s*$/, '')     // SONDAKİ VİRGÜLÜ SİL
+                    .trim();
                 
                 urunVerileri[k].push({ baslik: p[1].trim(), aciklama: aciklama, resim: resimYolu });
             }
         });
 
-        // --- B. Metinleri ve Bannerları İşle (Kritik Düzeltme) ---
+        // --- B. Metinleri ve Bannerları İşle ---
         descData.split('\n').slice(1).forEach(row => {
             const p = row.split(',');
-            // Satırın dolu olduğundan ve kategori (A sütunu) içerdiğinden emin ol
             if (p.length >= 2 && p[0].trim() !== "") {
                 const kategori = p[0].trim();
                 const baslik = p[1].trim();
-                
-                // Banner Sütunu Kontrolü: Banner her zaman SON parçadır.
                 const bannerYolu = p[p.length - 1].replace(/\r/g, "").trim();
                 
-                // Açıklama: Başlık (Index 1) ile Banner (Son Index) arasıdır.
                 let tamAciklama = p.slice(2, p.length - 1).join(',');
-                tamAciklama = tamAciklama.replace(/^"|"$/g, '').replace(/""/g, '"').trim();
                 
-                // HATA KORUMASI: Eğer Banner sütunu boş bırakıldığı için metnin parçası banner sanıldıysa düzelt
-                // (Eğer bannerYolu bir resim değilse ve uzunsa, demek ki o da açıklamanın devamıdır)
+                // TEMİZLİK
+                tamAciklama = tamAciklama
+                    .replace(/^"|"$/g, '')
+                    .replace(/""/g, '"')
+                    .replace(/^,\s*/, '')
+                    .trim();
+                
+                // Banner Hatası Koruması
                 if (!bannerYolu.match(/\.(jpg|jpeg|png|webp)$/i) && bannerYolu.length > 20) {
-                     tamAciklama += ", " + bannerYolu;
+                     let ekMetin = bannerYolu.replace(/^"|"$/g, '').replace(/^,\s*/, '');
+                     tamAciklama += ", " + ekMetin;
                 }
 
                 kategoriMetinleri[kategori] = { baslik: baslik, aciklama: tamAciklama, banner: bannerYolu };
@@ -81,21 +86,19 @@ async function verileriGetir() {
         corpData.split('\n').slice(1).forEach(row => { const y = row.split(',')[0].trim(); if(y) kurumsalGorseller.push(y); });
 
         isDataLoaded = true;
-        console.log("✅ Veriler akıllı modda yüklendi.");
+        console.log("✅ Veriler yüklendi ve temizlendi.");
         
-        // Sayfayı yenile (Veriler gelince görüntüyü güncelle)
+        // Sayfayı yenile
         const aktifSayfa = document.querySelector('.page-section.active-page');
         if(aktifSayfa) showPage(aktifSayfa.id);
 
     } catch (e) { 
         console.error("Veri Hatası:", e);
-        // Hata olsa bile ana sayfayı göster
-        document.getElementById('home').classList.add('active-page');
     }
 }
 
 // ============================================================
-// 3. YENİ HERO SLIDER MOTORU (ALVINA TARZI)
+// 3. YENİ HERO SLIDER MOTORU (ALVINA UYUMLU)
 // ============================================================
 
 function slideriBaslat() {
@@ -165,7 +168,7 @@ function resetAutoSlide() {
 }
 
 // ============================================================
-// 4. NAVİGASYON VE DİNAMİK İÇERİK YÖNETİMİ
+// 4. NAVİGASYON YÖNETİMİ
 // ============================================================
 
 async function showPage(pageId) {
@@ -188,7 +191,7 @@ async function showPage(pageId) {
 
     // Sayfa özel yüklemeleri
     if (pageId === 'home') {
-        slideriBaslat(); // YENİ SLIDER BAŞLATMA
+        slideriBaslat(); // ANA SAYFA SLIDER'I ÇALIŞTIR
     } else if (pageId === 'kurumsal') {
         kurumsalGaleriYukle(); 
     } else if (pageId !== 'iletisim') {
@@ -228,7 +231,6 @@ function metinleriGuncelle(kategori) {
         const bannerImg = sec.querySelector('.category-banner-img');
         const bannerBox = sec.querySelector('.category-banner-box');
         
-        // Eğer banner geçerli bir resim dosyasıysa göster
         if (bannerImg && bannerBox && kategoriMetinleri[kategori].banner && kategoriMetinleri[kategori].banner.match(/\.(jpg|jpeg|png|webp)$/i)) {
             bannerImg.src = kategoriMetinleri[kategori].banner;
             bannerBox.style.display = "block";
@@ -279,7 +281,7 @@ function kurumsalGaleriYukle() {
 }
 
 // ============================================================
-// 6. TEKLİF SEPETİ VE UI AKSİYONLARI
+// 6. TEKLİF SEPETİ VE UI
 // ============================================================
 
 function sepeteEkle(urunAdi) {
@@ -311,6 +313,4 @@ function toggleMobileMenu() {
     document.getElementById("mobileMenu").classList.toggle("open"); 
 }
 
-// Sayfa ilk açıldığında verileri çekmeye başla
 window.onload = verileriGetir;
-
