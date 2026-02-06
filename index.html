@@ -58,13 +58,15 @@
     <div id="main" class="main-content">
 
         <div id="home" class="page-section active-page">
-            <div class="hero-slider">
-                <img src="resimler/vitrin.jpg" onerror="this.src='https://via.placeholder.com/1200x400?text=A%26C+Kürk+Vitrin'" alt="A&C Vitrin">
-                <div class="hero-overlay">
-                    <h1>A&C KÜRK İMALAT</h1>
-                    <p>2026 Sezonu Toptan Satış</p>
-                </div>
+            
+            <div class="hero-container">
+                <div class="hero-slider" id="hero-slider">
+                    </div>
+                <button class="slider-btn prev-btn" onclick="slideDegistir(-1)">❮</button>
+                <button class="slider-btn next-btn" onclick="slideDegistir(1)">❯</button>
+                <div class="slider-dots" id="slider-dots"></div>
             </div>
+
             <div class="section-header">Öne Çıkan Koleksiyonlar</div>
             <div class="preview-grid">
                 <div class="product-card" onclick="showPage('sapkalar')" style="cursor: pointer;">
@@ -82,47 +84,12 @@
             </div>
         </div>
 
-        <div id="sapkalar" class="page-section">
-            <h2 class="section-header">Yükleniyor...</h2>
-            <div class="category-desc"><p>Lütfen bekleyin...</p></div>
-            <div class="category-banner-box"><img src="" class="category-banner-img"></div>
-            <div class="product-grid-layout"></div>
-        </div>
-
-        <div id="kapusonlar" class="page-section">
-            <h2 class="section-header">Yükleniyor...</h2>
-            <div class="category-desc"><p>Lütfen bekleyin...</p></div>
-            <div class="category-banner-box"><img src="" class="category-banner-img"></div>
-            <div class="product-grid-layout"></div>
-        </div>
-
-        <div id="yakalar" class="page-section">
-            <h2 class="section-header">Yükleniyor...</h2>
-            <div class="category-desc"><p>Lütfen bekleyin...</p></div>
-            <div class="category-banner-box"><img src="" class="category-banner-img"></div>
-            <div class="product-grid-layout"></div>
-        </div>
-
-        <div id="ponpon" class="page-section">
-            <h2 class="section-header">Yükleniyor...</h2>
-            <div class="category-desc"><p>Lütfen bekleyin...</p></div>
-            <div class="category-banner-box"><img src="" class="category-banner-img"></div>
-            <div class="product-grid-layout"></div>
-        </div>
-
-        <div id="sizeozel" class="page-section">
-            <h2 class="section-header">Yükleniyor...</h2>
-            <div class="category-desc"><p>Lütfen bekleyin...</p></div>
-            <div class="category-banner-box"><img src="" class="category-banner-img"></div>
-            <div class="product-grid-layout"></div>
-        </div>
-        
-        <div id="katalog" class="page-section">
-            <h2 class="section-header">Yükleniyor...</h2>
-            <div class="category-desc"><p>Lütfen bekleyin...</p></div>
-            <div class="category-banner-box"><img src="" class="category-banner-img"></div>
-            <div class="product-grid-layout"></div>
-        </div>
+        <div id="sapkalar" class="page-section"><h2 class="section-header">Yükleniyor...</h2><div class="category-desc"><p>Lütfen bekleyin...</p></div><div class="category-banner-box"><img src="" class="category-banner-img"></div><div class="product-grid-layout"></div></div>
+        <div id="kapusonlar" class="page-section"><h2 class="section-header">Yükleniyor...</h2><div class="category-desc"><p>Lütfen bekleyin...</p></div><div class="category-banner-box"><img src="" class="category-banner-img"></div><div class="product-grid-layout"></div></div>
+        <div id="yakalar" class="page-section"><h2 class="section-header">Yükleniyor...</h2><div class="category-desc"><p>Lütfen bekleyin...</p></div><div class="category-banner-box"><img src="" class="category-banner-img"></div><div class="product-grid-layout"></div></div>
+        <div id="ponpon" class="page-section"><h2 class="section-header">Yükleniyor...</h2><div class="category-desc"><p>Lütfen bekleyin...</p></div><div class="category-banner-box"><img src="" class="category-banner-img"></div><div class="product-grid-layout"></div></div>
+        <div id="sizeozel" class="page-section"><h2 class="section-header">Yükleniyor...</h2><div class="category-desc"><p>Lütfen bekleyin...</p></div><div class="category-banner-box"><img src="" class="category-banner-img"></div><div class="product-grid-layout"></div></div>
+        <div id="katalog" class="page-section"><h2 class="section-header">Yükleniyor...</h2><div class="category-desc"><p>Lütfen bekleyin...</p></div><div class="category-banner-box"><img src="" class="category-banner-img"></div><div class="product-grid-layout"></div></div>
 
         <div id="kurumsal" class="page-section">
             <div class="about-content">
