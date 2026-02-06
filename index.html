@@ -60,30 +60,38 @@
         <div id="home" class="page-section active-page">
             
             <div class="hero-container">
-                <div class="hero-slider" id="hero-slider">
-                    </div>
+                <div class="hero-slider" id="hero-slider"></div>
                 <button class="slider-btn prev-btn" onclick="slideDegistir(-1)">❮</button>
                 <button class="slider-btn next-btn" onclick="slideDegistir(1)">❯</button>
                 <div class="slider-dots" id="slider-dots"></div>
             </div>
 
-            <div class="section-header">Öne Çıkan Koleksiyonlar</div>
-            <div class="preview-grid">
-                <div class="product-card" onclick="showPage('sapkalar')" style="cursor: pointer;">
-                    <div class="product-img-box"><img src="urunler/sapkalar/kapak.jpg" onerror="this.src='https://via.placeholder.com/300?text=Şapka'"></div>
-                    <div class="product-info"><h3>ŞAPKALAR</h3><p>Kalpak ve Pilot Modeller</p><span style="color:#ff9f43; font-weight:bold;">İNCELE →</span></div>
-                </div>
-                <div class="product-card" onclick="showPage('yakalar')" style="cursor: pointer;">
-                    <div class="product-img-box"><img src="urunler/yakalar/kapak.jpg" onerror="this.src='https://via.placeholder.com/300?text=Yaka'"></div>
-                    <div class="product-info"><h3>YAKALAR</h3><p>Seyyar ve Dikimlik</p><span style="color:#ff9f43; font-weight:bold;">İNCELE →</span></div>
-                </div>
-                <div class="product-card" onclick="showPage('sizeozel')" style="cursor: pointer;">
-                    <div class="product-img-box"><img src="urunler/atolye/kapak.jpg" onerror="this.src='https://via.placeholder.com/300?text=Size+Özel'"></div>
-                    <div class="product-info"><h3>SİZE ÖZEL</h3><p>Müşteri Ürünlerine Uygulama</p><span style="color:#ff9f43; font-weight:bold;">İNCELE →</span></div>
+            <div class="single-banner-wrap" onclick="showPage('sizeozel')">
+                <img src="resimler/anasayfa-orta.jpg" onerror="this.src='https://via.placeholder.com/1500x600?text=SİZE+ÖZEL+ÜRETİM+İÇİN+TIKLAYIN'" alt="Orta Banner">
+                <div class="overlay-text-center">
+                    <h2>ATÖLYE & ÖZEL ÜRETİM</h2>
+                    <button class="btn-overlay">DETAYLI BİLGİ</button>
                 </div>
             </div>
-        </div>
 
+            <div class="split-showcase-wrap">
+                <div class="split-box" onclick="showPage('sapkalar')">
+                    <img src="urunler/sapkalar/kapak.jpg" onerror="this.src='https://via.placeholder.com/800x1000?text=ŞAPKALAR'" alt="Şapkalar">
+                    <div class="overlay-text-bottom">
+                        <h3>KÜRK ŞAPKALAR</h3>
+                        <span>KOLEKSİYONU İNCELE →</span>
+                    </div>
+                </div>
+                <div class="split-box" onclick="showPage('yakalar')">
+                    <img src="urunler/yakalar/kapak.jpg" onerror="this.src='https://via.placeholder.com/800x1000?text=YAKALAR'" alt="Yakalar">
+                    <div class="overlay-text-bottom">
+                        <h3>KÜRK YAKALAR</h3>
+                        <span>KOLEKSİYONU İNCELE →</span>
+                    </div>
+                </div>
+            </div>
+
+        </div> 
         <div id="sapkalar" class="page-section"><h2 class="section-header">Yükleniyor...</h2><div class="category-desc"><p>Lütfen bekleyin...</p></div><div class="category-banner-box"><img src="" class="category-banner-img"></div><div class="product-grid-layout"></div></div>
         <div id="kapusonlar" class="page-section"><h2 class="section-header">Yükleniyor...</h2><div class="category-desc"><p>Lütfen bekleyin...</p></div><div class="category-banner-box"><img src="" class="category-banner-img"></div><div class="product-grid-layout"></div></div>
         <div id="yakalar" class="page-section"><h2 class="section-header">Yükleniyor...</h2><div class="category-desc"><p>Lütfen bekleyin...</p></div><div class="category-banner-box"><img src="" class="category-banner-img"></div><div class="product-grid-layout"></div></div>
@@ -95,7 +103,7 @@
             <div class="about-content">
                 <h2 class="section-header">HAKKIMIZDA</h2>
                 <div class="category-desc">
-                    <p>Kapalıçarşı’nın kalbinden gelen ustalık geleneğiyle, tekstil ve kürk sektöründe 20 yılı aşkın süredir faaliyet gösteriyoruz. %100 yerli üretim gücümüzle sektöre yön veriyoruz.</p>
+                    <p>Kapalıçarşı’nın kalbinden gelen ustalık geleneğiyle, tekstil ve kürk sektöründe 20 yılı aşkın süredir faaliyet gösteriyoruz.</p>
                 </div>
                 <div class="stats-container">
                     <div class="stat-box"><h3>20+</h3><p>Yıl Tecrübe</p></div>
@@ -114,18 +122,13 @@
                 <div class="contact-details">
                     <div style="margin-bottom: 20px;">
                         <h3>YÖNETİM</h3>
-                        <p><strong>Ahmet COŞAR</strong> - Firma Sahibi</p>
+                        <p><strong>Ahmet COŞAR</strong></p>
                         <p>📞 0532 578 94 00</p>
-                    </div>
-                    <div style="margin-bottom: 20px;">
-                        <h3>SATIŞ & SİPARİŞ</h3>
-                        <p><strong>Muhammed Halit COŞAR</strong></p>
-                        <p>📞 0541 578 94 00</p>
                     </div>
                     <div class="address-box">
                         <strong>ADRES:</strong><br>
                         Kanarya Mah. 2.Arıkuşu Sk. No:21B<br>
-                        İç Kapı No:1, Küçükçekmece / İSTANBUL
+                        Küçükçekmece / İSTANBUL
                     </div>
                 </div>
                 <div class="map-container">
