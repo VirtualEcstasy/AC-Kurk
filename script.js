@@ -313,3 +313,4 @@ function toggleMobileMenu() {
 
 // Sayfa ilk açıldığında verileri çekmeye başla
 window.onload = verileriGetir;
+
