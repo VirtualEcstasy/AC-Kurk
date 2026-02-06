@@ -58,7 +58,7 @@ async function verileriGetir() {
                 const kategori = p[0].trim();
                 const baslik = p[1].trim();
                 
-                // Banner mantığı: Eğer satırda fazladan virgül (yani uzun açıklama) varsa sütun sayısı artar.
+                // Banner mantığı: Eğer satırda fazladan virgül varsa sütun sayısı artar.
                 // Bu yüzden banner her zaman SON sütundadır.
                 const bannerYolu = p[p.length - 1].replace(/\r/g, "").trim();
                 
@@ -85,35 +85,7 @@ async function verileriGetir() {
 
     } catch (e) { 
         console.error("Veri Hatası:", e); 
-    }
-}
-
-        // --- B. Metinleri ve Bannerları İşle ---
-        descData.split('\n').slice(1).forEach(row => {
-            const p = row.split(',');
-            if (p.length >= 2 && p[0].trim() !== "") {
-                const kategori = p[0].trim();
-                const bannerYolu = p.length >= 4 ? p[p.length - 1].replace(/\r/g, "").trim() : "";
-                const tamAciklama = p.slice(2, p.length >= 4 ? p.length - 1 : p.length).join(',').replace(/^"|"$/g, '').trim();
-                
-                kategoriMetinleri[kategori] = { baslik: p[1].trim(), aciklama: tamAciklama, banner: bannerYolu };
-            }
-        });
-
-        // --- C. Diğer Veriler ---
-        sliderData.split('\n').slice(1).forEach(row => { const y = row.split(',')[0].trim(); if(y) sliderGorselleri.push(y); });
-        corpData.split('\n').slice(1).forEach(row => { const y = row.split(',')[0].trim(); if(y) kurumsalGorseller.push(y); });
-
-        isDataLoaded = true;
-        console.log("✅ Veriler başarıyla yüklendi.");
-        
-        // Mevcut sayfayı render et (Yükleme bittiğinde görüntü bozuk kalmasın)
-        const currentPath = document.querySelector('.page-section.active-page')?.id || 'home';
-        showPage(currentPath);
-        
-    } catch (e) { 
-        console.error("Veri çekme hatası:", e); 
-        // Hata olsa bile ana sayfayı göstererek o karmaşık görüntüyü engelle
+        // Hata olsa bile ana sayfayı göstererek çökmesini engelle
         document.getElementById('home').classList.add('active-page');
     }
 }
@@ -279,4 +251,3 @@ function toggleMobileMenu() {
 
 // Sayfa ilk açıldığında verileri çekmeye başla
 window.onload = verileriGetir;
-
