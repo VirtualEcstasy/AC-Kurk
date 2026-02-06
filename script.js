@@ -1,204 +1,237 @@
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-    <meta charset="UTF-8">
+// ============================================================
+// 1. AYARLAR & CSV LİNKLERİ
+// ============================================================
+const PRODUCT_SHEET_URL   = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQGoOZ2ZKks0gBx_fzLzsbM9w00MnxgsljIDgxfZ0HJtWjhHmNnasPPzYu5OFlyz9PZjDo1SWrnAEb_/pub?gid=0&single=true&output=csv";
+const DESC_SHEET_URL      = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQGoOZ2ZKks0gBx_fzLzsbM9w00MnxgsljIDgxfZ0HJtWjhHmNnasPPzYu5OFlyz9PZjDo1SWrnAEb_/pub?gid=1392721541&single=true&output=csv";
+const SLIDER_SHEET_URL    = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQGoOZ2ZKks0gBx_fzLzsbM9w00MnxgsljIDgxfZ0HJtWjhHmNnasPPzYu5OFlyz9PZjDo1SWrnAEb_/pub?gid=1661861719&single=true&output=csv";
+const CORPORATE_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQGoOZ2ZKks0gBx_fzLzsbM9w00MnxgsljIDgxfZ0HJtWjhHmNnasPPzYu5OFlyz9PZjDo1SWrnAEb_/pub?gid=1053479916&single=true&output=csv";
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+let urunVerileri = {};
+let kategoriMetinleri = {};
+let sliderGorselleri = [];
+let kurumsalGorseller = []; 
+let teklifSepeti = []; 
+let isDataLoaded = false;
 
-    <title>A&C Kürk | Toptan Kürk Yaka ve Kapüşon İmalatı</title>
-    <meta name="description" content="A&C Kürk - 20 yılı aşkın tecrübe ile toptan kürk yaka, kapüşon ve şapka imalatı. İstanbul'un kalbinde kaliteli ve yerli üretim.">
-    <meta name="keywords" content="toptan kürk, kürk imalatı, kürk yaka, kürk kapüşon, kürk şapka, A&C Kürk, İstanbul kürk firmaları">
+// ============================================================
+// 2. VERİ MOTORU (Virgül ve Boş Satır Korumalı)
+// ============================================================
+async function verileriGetir() {
+    if (isDataLoaded) return;
+    try {
+        const [prodRes, descRes, sliderRes, corpRes] = await Promise.all([
+            fetch(PRODUCT_SHEET_URL), fetch(DESC_SHEET_URL), fetch(SLIDER_SHEET_URL), fetch(CORPORATE_SHEET_URL)
+        ]);
 
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
+        const prodData = await prodRes.text();
+        const descData = await descRes.text();
+        const sliderData = await sliderRes.text();
+        const corpData = await corpRes.text();
 
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="logo-area">
-                <a onclick="showPage('home')" style="cursor: pointer;">
-                    <img src="resimler/logo.png" alt="A&C Kürk Logo" style="height: 50px; width: auto;">
-                </a>
-            </div>
-            <div class="desktop-menu">
-                <a onclick="showPage('home')" class="nav-link active">ANA SAYFA</a>
-                <a onclick="showPage('sapkalar')" class="nav-link">ŞAPKALAR</a>
-                <a onclick="showPage('kapusonlar')" class="nav-link">KAPÜŞON</a>
-                <a onclick="showPage('yakalar')" class="nav-link">YAKALAR</a>
-                <a onclick="showPage('ponpon')" class="nav-link highlight">PONPON</a>
-                <a onclick="showPage('katalog')" class="nav-link">KATALOG</a>
-                <a onclick="showPage('sizeozel')" class="nav-link">SİZE ÖZEL</a>
-                <a onclick="showPage('kurumsal')" class="nav-link">KURUMSAL</a>
-                <a onclick="showPage('iletisim')" class="nav-link">İLETİŞİM</a>
-            </div>
-            <button class="mobile-toggle" onclick="toggleMobileMenu()">☰</button>
-        </div>
-
-        <div id="mobileMenu" class="mobile-dropdown">
-            <a onclick="showPage('home')">ANA SAYFA</a>
-            <a onclick="showPage('sapkalar')">ŞAPKALAR</a>
-            <a onclick="showPage('kapusonlar')">KAPÜŞONLAR</a>
-            <a onclick="showPage('yakalar')">YAKALAR</a>
-            <a onclick="showPage('ponpon')" style="color:#ff9f43;">PONPON</a>
-            <a onclick="showPage('katalog')">KÜRK KATALOĞU</a>
-            <a onclick="showPage('sizeozel')">SİZE ÖZEL</a>
-            <a onclick="showPage('kurumsal')">HAKKIMIZDA</a>
-            <a onclick="showPage('iletisim')">İLETİŞİM</a>
-        </div>
-    </nav>
-
-    <div class="floating-container">
-        <button id="floating-quote-btn" onclick="whatsappTeklifGonder()" class="float-btn quote-btn" style="display: none; background-color: #ff9f43; color: white; width: auto; padding: 0 20px; border-radius: 30px; border: none; font-weight: bold; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.3); margin-bottom: 10px; height: 50px; font-size: 14px;">
-            📋 0 Ürün İçin Teklif İste
-        </button>
-
-        <a href="https://goo.gl/maps/placeholder" target="_blank" class="float-btn map-btn" title="Konuma Git">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg"><path d="M12 0C7.31 0 3.5 3.81 3.5 8.5C3.5 14.88 12 24 12 24C12 24 20.5 14.88 20.5 8.5C20.5 3.81 16.69 0 12 0ZM12 11.5C10.34 11.5 9 10.16 9 8.5C9 6.84 10.34 5.5 12 5.5C13.66 5.5 15 6.84 15 8.5C15 10.16 13.66 11.5 12 11.5Z"/></svg>
-        </a>
-        <a href="https://wa.me/905415789400" target="_blank" class="float-btn whatsapp-btn" title="WhatsApp Sipariş">
-            <svg width="30" height="30" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654z"/></svg>
-        </a>
-    </div>
-
-    <div id="main" class="main-content">
-
-        <div id="home" class="page-section active-page">
-            <div class="hero-slider">
-                <img src="vitrin.jpg" alt="A&C Vitrin">
-                <div class="hero-overlay">
-                    <h1>A&C KÜRK İMALAT</h1>
-                    <p>2026 Sezonu Toptan Satış</p>
-                </div>
-            </div>
-            <div class="reference-section">
-                <h3 class="ref-title">ÜRÜN ÖRNEKLERİMİZ</h3>
-                <div class="logo-slider"><div class="logo-slide-track"></div></div>
-            </div>
-            <div class="preview-grid">
-                <div class="product-card" onclick="showPage('sapkalar')">
-                    <div class="product-img-box"><img src="urunler/sapkalar/kapak.jpg" onerror="this.src='placeholder.jpg'"></div>
-                    <div class="product-info"><h3>ŞAPKALAR</h3><p>Kalpak ve Pilot Modeller</p><span class="link-text">İNCELE →</span></div>
-                </div>
-                <div class="product-card" onclick="showPage('kapusonlar')">
-                    <div class="product-img-box"><img src="urunler/kapusonlar/kapak.jpg" onerror="this.src='placeholder.jpg'"></div>
-                    <div class="product-info"><h3>KAPÜŞONLAR</h3><p>Mont ve Kaban İçin</p><span class="link-text">İNCELE →</span></div>
-                </div>
-                <div class="product-card" onclick="showPage('yakalar')">
-                    <div class="product-img-box"><img src="urunler/yakalar/kapak.jpg" onerror="this.src='placeholder.jpg'"></div>
-                    <div class="product-info"><h3>YAKALAR</h3><p>Seyyar ve Dikimlik</p><span class="link-text">İNCELE →</span></div>
-                </div>
-                <div class="product-card" onclick="showPage('sizeozel')">
-                    <div class="product-img-box"><img src="urunler/atolye/kapak.jpg" onerror="this.src='placeholder.jpg'"></div>
-                    <div class="product-info"><h3>SİZE ÖZEL</h3><p>Müşteri Ürünlerine Uygulama</p><span class="link-text">İNCELE →</span></div>
-                </div>
-            </div>
-        </div>
-
-        <div id="sapkalar" class="page-section">
-            <h2 class="section-header">Yükleniyor...</h2>
-            <div class="category-desc"><p>Lütfen bekleyin...</p></div>
-            <div class="category-banner-box"><img src="" class="category-banner-img"></div>
-            <div class="product-grid-layout"></div>
-        </div>
-
-        <div id="kapusonlar" class="page-section">
-            <h2 class="section-header">Yükleniyor...</h2>
-            <div class="category-desc"><p>Lütfen bekleyin...</p></div>
-            <div class="category-banner-box"><img src="" class="category-banner-img"></div>
-            <div class="product-grid-layout"></div>
-        </div>
-
-        <div id="yakalar" class="page-section">
-            <h2 class="section-header">Yükleniyor...</h2>
-            <div class="category-desc"><p>Lütfen bekleyin...</p></div>
-            <div class="category-banner-box"><img src="" class="category-banner-img"></div>
-            <div class="product-grid-layout"></div>
-        </div>
-
-        <div id="ponpon" class="page-section">
-            <h2 class="section-header">Yükleniyor...</h2>
-            <div class="category-desc"><p>Lütfen bekleyin...</p></div>
-            <div class="category-banner-box"><img src="" class="category-banner-img"></div>
-            <div class="product-grid-layout"></div>
-        </div>
-
-        <div id="sizeozel" class="page-section">
-            <h2 class="section-header">Yükleniyor...</h2>
-            <div class="category-desc"><p>Lütfen bekleyin...</p></div>
-            <div class="category-banner-box"><img src="" class="category-banner-img"></div>
-            <div class="product-grid-layout"></div>
-        </div>
-
-        <div id="katalog" class="page-section">
-            <h2 class="section-header">Yükleniyor...</h2>
-            <div class="category-desc"><p>Lütfen bekleyin...</p></div>
-            <div class="category-banner-box"><img src="" class="category-banner-img"></div>
-            <div class="product-grid-layout"></div>
-        </div>
-
-        <div id="kurumsal" class="page-section">
-            <div class="about-content">
-                <h2 class="about-title">A&C KÜRK İMALAT</h2>
-                <p class="about-text">Kapalıçarşı’nın kalbinden gelen ustalık geleneğiyle, tekstil ve kürk sektöründe 20 yılı aşkın süredir faaliyet gösteriyoruz.</p>
-                <div class="stats-container">
-                    <div class="stat-box"><h3>20+</h3><p>Yıl Tecrübe</p></div>
-                    <div class="stat-box"><h3>%100</h3><p>Yerli Üretim</p></div>
-                </div>
+        // --- A. Ürünleri İşle (Virgül Koruma) ---
+        prodData.split('\n').slice(1).forEach(row => {
+            const p = row.split(',');
+            // En az 3 sütun olduğundan ve kategorinin boş olmadığından emin ol
+            if (p.length >= 3 && p[0].trim() !== "") {
+                const k = p[0].trim();
+                if (!urunVerileri[k]) urunVerileri[k] = [];
                 
-                <div class="video-story-section" style="margin-top: 40px;">
-                    <h3 class="section-header">ATÖLYE HİKAYEMİZ</h3>
-                    <div class="video-container">
-                        <video controls poster="resimler/atolye-kapak.jpg" style="width: 100%; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
-                            <source src="videolar/atolye-hikayesi.mp4" type="video/mp4">
-                            Tarayıcınız video desteği sunmuyor.
-                        </video>
-                    </div>
-                </div>
+                const resimYolu = p[p.length - 1].replace(/\r/g, "").trim();
+                // Açıklamadaki virgülleri koru
+                const aciklama = p.slice(2, p.length - 1).join(',').replace(/^"|"$/g, '').trim();
+                
+                urunVerileri[k].push({ baslik: p[1].trim(), aciklama: aciklama, resim: resimYolu });
+            }
+        });
 
-                <div class="section-header" style="margin-top: 30px;">ATÖLYEMİZDEN KARELER</div>
-                <div id="kurumsal-gallery-grid" class="product-grid-layout"></div>
-            </div>
-        </div>
+        // --- B. Metinleri ve Bannerları İşle ---
+        descData.split('\n').slice(1).forEach(row => {
+            const p = row.split(',');
+            if (p.length >= 2 && p[0].trim() !== "") {
+                const kategori = p[0].trim();
+                const bannerYolu = p.length >= 4 ? p[p.length - 1].replace(/\r/g, "").trim() : "";
+                const tamAciklama = p.slice(2, p.length >= 4 ? p.length - 1 : p.length).join(',').replace(/^"|"$/g, '').trim();
+                
+                kategoriMetinleri[kategori] = { baslik: p[1].trim(), aciklama: tamAciklama, banner: bannerYolu };
+            }
+        });
 
-        <div id="iletisim" class="page-section">
-            <h2 class="section-header">İLETİŞİM</h2>
-            <div class="contact-grid">
-                <div class="contact-details">
-                    <div style="margin-bottom: 30px; border-bottom: 1px solid #eee; padding-bottom: 20px;">
-                        <h3 style="font-size:16px; color:#111; margin-bottom:5px;">YÖNETİM</h3>
-                        <p style="font-size:18px; font-weight:bold; margin-bottom:5px;">Ahmet COŞAR</p>
-                        <p style="color:#555; font-size:14px;">Firma Sahibi</p>
-                        <p style="margin-top:5px;">📞 0532 578 94 00</p>
-                    </div>
-                    <div style="margin-bottom: 30px; border-bottom: 1px solid #eee; padding-bottom: 20px;">
-                        <h3 style="font-size:16px; color:#111; margin-bottom:5px;">SATIŞ & SİPARİŞ</h3>
-                        <p style="font-size:18px; font-weight:bold; margin-bottom:5px;">Muhammed Halit COŞAR</p>
-                        <p style="color:#555; font-size:14px;">Firma Temsilcisi</p>
-                        <p style="margin-top:5px;">📞 0541 578 94 00</p>
-                    </div>
-                    <div class="address-box">
-                        <strong>ATÖLYE & OFİS:</strong><br><br>
-                        Kanarya Mah. 2.Arıkuşu Sk. No:21B<br>
-                        İç Kapı No:1<br>
-                        Küçükçekmece / İSTANBUL
-                    </div>
-                </div>
-                <div class="map-container">
-                    <iframe src="https://maps.google.com/maps?q=Kanarya+Mah.+2.Arıkuşu+Sk.+No:21B+Küçükçekmece+İstanbul&t=&z=15&ie=UTF8&iwloc=&output=embed" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
-                </div>
-            </div>
-        </div>
+        // --- C. Diğer Veriler ---
+        sliderData.split('\n').slice(1).forEach(row => { const y = row.split(',')[0].trim(); if(y) sliderGorselleri.push(y); });
+        corpData.split('\n').slice(1).forEach(row => { const y = row.split(',')[0].trim(); if(y) kurumsalGorseller.push(y); });
 
-    </div>
+        isDataLoaded = true;
+        console.log("✅ Veriler başarıyla yüklendi.");
+        
+        // Mevcut sayfayı render et (Yükleme bittiğinde görüntü bozuk kalmasın)
+        const currentPath = document.querySelector('.page-section.active-page')?.id || 'home';
+        showPage(currentPath);
+        
+    } catch (e) { 
+        console.error("Veri çekme hatası:", e); 
+        // Hata olsa bile ana sayfayı göstererek o karmaşık görüntüyü engelle
+        document.getElementById('home').classList.add('active-page');
+    }
+}
 
-    <script>
-        document.addEventListener('contextmenu', event => event.preventDefault());
-        document.onkeydown = function(e) {
-            if(e.keyCode == 123) { return false; }
-            if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) { return false; }
-            if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) { return false; }
+// ============================================================
+// 3. GÖRÜNÜM VE RENDER FONKSİYONLARI
+// ============================================================
+
+function titleGuncelle(pageId) {
+    let anaBaslik = "A&C Kürk | Toptan İmalat";
+    document.title = (pageId !== 'home' && kategoriMetinleri[pageId]) 
+        ? `${kategoriMetinleri[pageId].baslik} - ${anaBaslik}` 
+        : anaBaslik;
+}
+
+function metinleriGuncelle(kategori) {
+    const sec = document.getElementById(kategori);
+    if (sec && kategoriMetinleri[kategori]) {
+        const header = sec.querySelector('.section-header');
+        const desc = sec.querySelector('.category-desc p');
+        if (header) header.innerText = kategoriMetinleri[kategori].baslik;
+        if (desc) desc.innerHTML = kategoriMetinleri[kategori].aciklama;
+        
+        const bannerImg = sec.querySelector('.category-banner-img');
+        const bannerBox = sec.querySelector('.category-banner-box');
+        
+        if (bannerImg && bannerBox && kategoriMetinleri[kategori].banner) {
+            bannerImg.src = kategoriMetinleri[kategori].banner;
+            bannerBox.style.display = "block";
+        } else if (bannerBox) {
+            bannerBox.style.display = "none";
         }
-    </script>
-    <script src="script.js"></script>
-</body>
-</html>
+    }
+}
+
+function urunleriYukle(kategori) {
+    const box = document.querySelector(`#${kategori} .product-grid-layout`);
+    if (!box || !urunVerileri[kategori]) return;
+    
+    box.innerHTML = urunVerileri[kategori].map(u => {
+        // Resim yoksa başlık (ayırıcı) olarak render et
+        if (!u.resim || u.resim === "" || u.resim === "undefined") {
+            return `
+            <div class="category-separator" style="grid-column: 1 / -1; width: 100%; text-align: center; padding: 40px 0;">
+                <h2 style="font-size: 24px; color: #111; border-bottom: 2px solid #ff9f43; display: inline-block; padding-bottom: 5px;">${u.baslik}</h2>
+                ${u.aciklama ? `<p style="color: #666; margin-top: 10px;">${u.aciklama}</p>` : ''}
+            </div>`;
+        }
+
+        return `
+        <div class="product-card">
+            <div class="product-img-box">
+                <img src="${u.resim}" loading="lazy" onerror="this.src='placeholder.jpg'">
+            </div>
+            <div class="product-info">
+                <h3>${u.baslik}</h3>
+                <p>${u.aciklama}</p>
+                <button onclick="sepeteEkle('${u.baslik}')" class="quote-add-btn" style="width:100%; background:none; border:1px solid #ff9f43; color:#ff9f43; padding:8px; border-radius:4px; cursor:pointer; font-weight:bold; margin-top:10px;">
+                    LİSTEYE EKLE +
+                </button>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+// ============================================================
+// 4. NAVİGASYON VE DİNAMİK İÇERİK
+// ============================================================
+
+async function showPage(pageId) {
+    // Veri yüklenmemişse önce yükle
+    if (!isDataLoaded) await verileriGetir();
+    
+    titleGuncelle(pageId);
+
+    // Tüm sayfaları gizle ve sadece hedef sayfayı göster (Karmaşayı önler)
+    document.querySelectorAll('.page-section').forEach(p => {
+        p.classList.remove('active-page');
+        p.style.display = 'none';
+    });
+
+    const active = document.getElementById(pageId);
+    if (active) {
+        active.classList.add('active-page');
+        active.style.display = 'block';
+    }
+
+    // Sayfa özel yüklemeleri
+    if (pageId === 'home') {
+        slideriGuncelle();
+    } else if (pageId === 'kurumsal') {
+        kurumsalGaleriYukle(); 
+    } else if (pageId !== 'iletisim') {
+        metinleriGuncelle(pageId);
+        urunleriYukle(pageId);
+    }
+
+    // Aktif menü linki
+    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+    document.querySelectorAll(`.nav-link[onclick*="${pageId}"]`).forEach(l => l.classList.add('active'));
+    
+    // Mobil menü kapat ve yukarı kaydır
+    const mob = document.getElementById("mobileMenu");
+    if(mob) mob.classList.remove("open");
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ============================================================
+// 5. TEKLİF SEPETİ VE WHATSAPP
+// ============================================================
+
+function sepeteEkle(urunAdi) {
+    if (!teklifSepeti.includes(urunAdi)) {
+        teklifSepeti.push(urunAdi);
+        sepetiGuncelle();
+    }
+}
+
+function sepetiGuncelle() {
+    const sepetButon = document.getElementById('floating-quote-btn');
+    if (sepetButon) {
+        if (teklifSepeti.length > 0) {
+            sepetButon.style.display = 'flex';
+            sepetButon.innerText = `📋 ${teklifSepeti.length} Ürün İçin Teklif İste`;
+        } else {
+            sepetButon.style.display = 'none';
+        }
+    }
+}
+
+function whatsappTeklifGonder() {
+    let mesaj = "Merhaba A&C Kürk, web sitenizden seçtiğim ürünler için toptan fiyat teklifi istiyorum:%0A%0A";
+    teklifSepeti.forEach((urun, index) => { mesaj += `${index + 1}. ${urun}%0A`; });
+    window.open(`https://wa.me/905415789400?text=${mesaj}`, '_blank');
+}
+
+// ============================================================
+// 6. EKSTRA UI FONKSİYONLARI
+// ============================================================
+
+function slideriGuncelle() {
+    const track = document.querySelector('.logo-slide-track');
+    if (track && sliderGorselleri.length > 0) {
+        track.innerHTML = [...sliderGorselleri, ...sliderGorselleri].map(img => 
+            `<div class="slide product-slide"><img src="${img}" loading="lazy"></div>`
+        ).join('');
+    }
+}
+
+function kurumsalGaleriYukle() {
+    const galleryBox = document.getElementById('kurumsal-gallery-grid');
+    if (galleryBox && kurumsalGorseller.length > 0) {
+        galleryBox.innerHTML = kurumsalGorseller.map(img => `
+            <div class="product-card" style="box-shadow: none; border: 1px solid #eee;">
+                <div class="product-img-box"><img src="${img}" loading="lazy"></div>
+            </div>`).join('');
+    }
+}
+
+function toggleMobileMenu() { 
+    document.getElementById("mobileMenu").classList.toggle("open"); 
+}
+
+// Sayfa ilk açıldığında verileri çekmeye başla
+window.onload = verileriGetir;
