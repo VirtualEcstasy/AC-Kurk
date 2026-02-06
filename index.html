@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>A&C Kürk | Toptan Kürk Yaka ve Kapüşon İmalatı</title>
+    <meta name="description" content="A&C Kürk - 20 yılı aşkın tecrübe ile toptan kürk yaka, kapüşon ve şapka imalatı. İstanbul'un kalbinde kaliteli ve yerli üretim.">
+    <meta name="keywords" content="toptan kürk, kürk imalatı, kürk yaka, kürk kapüşon, kürk şapka, A&C Kürk, İstanbul kürk firmaları">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo-area">
+                <a onclick="showPage('home')" style="cursor: pointer;">
+                    <img src="resimler/logo.png" alt="A&C Kürk Logo" style="height: 50px; width: auto;">
+                </a>
+            </div>
+            <div class="desktop-menu">
+                <a onclick="showPage('home')" class="nav-link active">ANA SAYFA</a>
+                <a onclick="showPage('sapkalar')" class="nav-link">ŞAPKALAR</a>
+                <a onclick="showPage('kapusonlar')" class="nav-link">KAPÜŞON</a>
+                <a onclick="showPage('yakalar')" class="nav-link">YAKALAR</a>
+                <a onclick="showPage('ponpon')" class="nav-link highlight">PONPON</a>
+                <a onclick="showPage('katalog')" class="nav-link">KATALOG</a>
+                <a onclick="showPage('sizeozel')" class="nav-link">SİZE ÖZEL</a>
+                <a onclick="showPage('kurumsal')" class="nav-link">KURUMSAL</a>
+                <a onclick="showPage('iletisim')" class="nav-link">İLETİŞİM</a>
+            </div>
+            <button class="mobile-toggle" onclick="toggleMobileMenu()">☰</button>
+        </div>
+
+        <div id="mobileMenu" class="mobile-dropdown">
+            <a onclick="showPage('home')">ANA SAYFA</a>
+            <a onclick="showPage('sapkalar')">ŞAPKALAR</a>
+            <a onclick="showPage('kapusonlar')">KAPÜŞONLAR</a>
+            <a onclick="showPage('yakalar')">YAKALAR</a>
+            <a onclick="showPage('ponpon')" style="color:#ff9f43;">PONPON</a>
+            <a onclick="showPage('katalog')">KÜRK KATALOĞU</a>
+            <a onclick="showPage('sizeozel')">SİZE ÖZEL</a>
+            <a onclick="showPage('kurumsal')">HAKKIMIZDA</a>
+            <a onclick="showPage('iletisim')">İLETİŞİM</a>
+        </div>
+    </nav>
+
+    <div class="floating-container">
+        <button id="floating-quote-btn" onclick="whatsappTeklifGonder()" class="float-btn quote-btn" style="display: none; background-color: #ff9f43; color: white; width: auto; padding: 0 20px; border-radius: 30px; border: none; font-weight: bold; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.3); margin-bottom: 10px; height: 50px; font-size: 14px;">
+            📋 0 Ürün İçin Teklif İste
+        </button>
+
+        <a href="https://goo.gl/maps/placeholder" target="_blank" class="float-btn map-btn" title="Konuma Git">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg"><path d="M12 0C7.31 0 3.5 3.81 3.5 8.5C3.5 14.88 12 24 12 24C12 24 20.5 14.88 20.5 8.5C20.5 3.81 16.69 0 12 0ZM12 11.5C10.34 11.5 9 10.16 9 8.5C9 6.84 10.34 5.5 12 5.5C13.66 5.5 15 6.84 15 8.5C15 10.16 13.66 11.5 12 11.5Z"/></svg>
+        </a>
+        <a href="https://wa.me/905415789400" target="_blank" class="float-btn whatsapp-btn" title="WhatsApp Sipariş">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654z"/></svg>
+        </a>
+    </div>
+
+    <div id="main" class="main-content">
+
+        <div id="home" class="page-section active-page">
+            <div class="hero-slider">
+                <img src="vitrin.jpg" alt="A&C Vitrin">
+                <div class="hero-overlay">
+                    <h1>A&C KÜRK İMALAT</h1>
+                    <p>2026 Sezonu Toptan Satış</p>
+                </div>
+            </div>
+            <div class="reference-section">
+                <h3 class="ref-title">ÜRÜN ÖRNEKLERİMİZ</h3>
+                <div class="logo-slider"><div class="logo-slide-track"></div></div>
+            </div>
+            <div class="preview-grid">
+                <div class="product-card" onclick="showPage('sapkalar')">
+                    <div class="product-img-box"><img src="urunler/sapkalar/kapak.jpg" onerror="this.src='placeholder.jpg'"></div>
+                    <div class="product-info"><h3>ŞAPKALAR</h3><p>Kalpak ve Pilot Modeller</p><span class="link-text">İNCELE →</span></div>
+                </div>
+                </div>
+        </div>
+
+        <div id="sapkalar" class="page-section">
+            <h2 class="section-header">Yükleniyor...</h2>
+            <div class="category-desc"><p>Lütfen bekleyin...</p></div>
+            <div class="category-banner-box"><img src="" class="category-banner-img"></div>
+            <div class="product-grid-layout"></div>
+        </div>
+
+        <div id="kapusonlar" class="page-section">
+            <h2 class="section-header">Yükleniyor...</h2>
+            <div class="category-desc"><p>Lütfen bekleyin...</p></div>
+            <div class="category-banner-box"><img src="" class="category-banner-img"></div>
+            <div class="product-grid-layout"></div>
+        </div>
+
+        <div id="yakalar" class="page-section">
+            <h2 class="section-header">Yükleniyor...</h2>
+            <div class="category-desc"><p>Lütfen bekleyin...</p></div>
+            <div class="category-banner-box"><img src="" class="category-banner-img"></div>
+            <div class="product-grid-layout"></div>
+        </div>
+
+        <div id="ponpon" class="page-section">
+            <h2 class="section-header">Yükleniyor...</h2>
+            <div class="category-desc"><p>Lütfen bekleyin...</p></div>
+            <div class="category-banner-box"><img src="" class="category-banner-img"></div>
+            <div class="product-grid-layout"></div>
+        </div>
+
+        <div id="sizeozel" class="page-section">
+            <h2 class="section-header">Yükleniyor...</h2>
+            <div class="category-desc"><p>Lütfen bekleyin...</p></div>
+            <div class="category-banner-box"><img src="" class="category-banner-img"></div>
+            <div class="product-grid-layout"></div>
+        </div>
+
+        <div id="kurumsal" class="page-section">
+            <div class="about-content">
+                <h2 class="about-title">A&C KÜRK İMALAT</h2>
+                <p class="about-text">Kapalıçarşı’nın kalbinden gelen ustalık geleneğiyle, tekstil ve kürk sektöründe 20 yılı aşkın süredir faaliyet gösteriyoruz.</p>
+                <div class="stats-container">
+                    <div class="stat-box"><h3>20+</h3><p>Yıl Tecrübe</p></div>
+                    <div class="stat-box"><h3>%100</h3><p>Yerli Üretim</p></div>
+                </div>
+                
+                <div class="video-story-section" style="margin-top: 40px;">
+                    <h3 class="section-header">ATÖLYE HİKAYEMİZ</h3>
+                    <div class="video-container">
+                        <video controls poster="resimler/atolye-kapak.jpg" style="width: 100%; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+                            <source src="videolar/atolye-hikayesi.mp4" type="video/mp4">
+                            Tarayıcınız video desteği sunmuyor.
+                        </video>
+                    </div>
+                </div>
+
+                <div class="section-header" style="margin-top: 30px;">ATÖLYEMİZDEN KARELER</div>
+                <div id="kurumsal-gallery-grid" class="product-grid-layout"></div>
+            </div>
+        </div>
+
+        <div id="iletisim" class="page-section">
+            <h2 class="section-header">İLETİŞİM</h2>
+            <div class="contact-grid">
+                <div class="contact-details">
+                    <div style="margin-bottom: 30px; border-bottom: 1px solid #eee; padding-bottom: 20px;">
+                        <h3 style="font-size:16px; color:#111; margin-bottom:5px;">YÖNETİM</h3>
+                        <p style="font-size:18px; font-weight:bold; margin-bottom:5px;">Ahmet COŞAR</p>
+                        <p style="color:#555; font-size:14px;">Firma Sahibi</p>
+                        <p style="margin-top:5px;">📞 0532 578 94 00</p>
+                    </div>
+                    <div style="margin-bottom: 30px; border-bottom: 1px solid #eee; padding-bottom: 20px;">
+                        <h3 style="font-size:16px; color:#111; margin-bottom:5px;">SATIŞ & SİPARİŞ</h3>
+                        <p style="font-size:18px; font-weight:bold; margin-bottom:5px;">Muhammed Halit COŞAR</p>
+                        <p style="color:#555; font-size:14px;">Firma Temsilcisi</p>
+                        <p style="margin-top:5px;">📞 0541 578 94 00</p>
+                    </div>
+                    <div class="address-box">
+                        <strong>ATÖLYE & OFİS:</strong><br><br>
+                        Kanarya Mah. 2.Arıkuşu Sk. No:21B<br>
+                        İç Kapı No:1<br>
+                        Küçükçekmece / İSTANBUL
+                    </div>
+                </div>
+                <div class="map-container">
+                     <iframe src="https://www.google.com/maps/embed?pb=YOUR_EMBED_CODE_HERE" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        document.addEventListener('contextmenu', event => event.preventDefault());
+        document.onkeydown = function(e) {
+            if(e.keyCode == 123) { return false; }
+            if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) { return false; }
+            if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) { return false; }
+        }
+    </script>
+    <script src="script.js"></script>
+</body>
+</html>
