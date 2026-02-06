@@ -14,7 +14,7 @@ let teklifSepeti = [];
 let isDataLoaded = false;
 
 // ============================================================
-// 2. VERİ MOTORU (Virgül ve Boş Satır Korumalı)
+// 2. VERİ MOTORU (Gelişmiş Virgül Korumalı)
 // ============================================================
 async function verileriGetir() {
     if (isDataLoaded) return;
@@ -28,21 +28,65 @@ async function verileriGetir() {
         const sliderData = await sliderRes.text();
         const corpData = await corpRes.text();
 
-        // --- A. Ürünleri İşle (Virgül Koruma) ---
+        // --- A. Ürünleri İşle (Virgül ve Tırnak Temizliği) ---
         prodData.split('\n').slice(1).forEach(row => {
             const p = row.split(',');
-            // En az 3 sütun olduğundan ve kategorinin boş olmadığından emin ol
+            // Satırın en azından Kategori ve Başlık içerdiğinden emin ol
             if (p.length >= 3 && p[0].trim() !== "") {
                 const k = p[0].trim();
                 if (!urunVerileri[k]) urunVerileri[k] = [];
                 
+                // Resim her zaman son sütundadır
                 const resimYolu = p[p.length - 1].replace(/\r/g, "").trim();
-                // Açıklamadaki virgülleri koru
-                const aciklama = p.slice(2, p.length - 1).join(',').replace(/^"|"$/g, '').trim();
+                
+                // Açıklama: Başlık (Index 1) ile Resim (Son Index) arasındaki her şeydir.
+                // slice ve join kullanarak aradaki virgülleri metne geri ekliyoruz.
+                let aciklama = p.slice(2, p.length - 1).join(',');
+                
+                // Google Sheets'in eklediği tırnak işaretlerini temizle ("..." -> ...)
+                aciklama = aciklama.replace(/^"|"$/g, '').replace(/""/g, '"').trim();
                 
                 urunVerileri[k].push({ baslik: p[1].trim(), aciklama: aciklama, resim: resimYolu });
             }
         });
+
+        // --- B. Metinleri ve Bannerları İşle (Kritik Virgül Düzeltmesi) ---
+        descData.split('\n').slice(1).forEach(row => {
+            const p = row.split(',');
+            // Satırın dolu olduğundan ve kategori (A sütunu) içerdiğinden emin ol
+            if (p.length >= 2 && p[0].trim() !== "") {
+                const kategori = p[0].trim();
+                const baslik = p[1].trim();
+                
+                // Banner mantığı: Eğer satırda fazladan virgül (yani uzun açıklama) varsa sütun sayısı artar.
+                // Bu yüzden banner her zaman SON sütundadır.
+                const bannerYolu = p[p.length - 1].replace(/\r/g, "").trim();
+                
+                // Açıklama: Başlık (Index 1) ile Banner (Son Index) arasıdır.
+                let tamAciklama = p.slice(2, p.length - 1).join(',');
+                
+                // Temizlik: Tırnakları kaldır
+                tamAciklama = tamAciklama.replace(/^"|"$/g, '').replace(/""/g, '"').trim();
+                
+                kategoriMetinleri[kategori] = { baslik: baslik, aciklama: tamAciklama, banner: bannerYolu };
+            }
+        });
+
+        // --- C. Diğer Slider ve Kurumsal Verileri ---
+        sliderData.split('\n').slice(1).forEach(row => { const y = row.split(',')[0].trim(); if(y) sliderGorselleri.push(y); });
+        corpData.split('\n').slice(1).forEach(row => { const y = row.split(',')[0].trim(); if(y) kurumsalGorseller.push(y); });
+
+        isDataLoaded = true;
+        console.log("✅ Veriler virgül korumalı olarak yüklendi.");
+        
+        // Sayfa açıksa veriyi hemen yansıt
+        const aktifSayfa = document.querySelector('.page-section.active-page');
+        if(aktifSayfa) showPage(aktifSayfa.id);
+
+    } catch (e) { 
+        console.error("Veri Hatası:", e); 
+    }
+}
 
         // --- B. Metinleri ve Bannerları İşle ---
         descData.split('\n').slice(1).forEach(row => {
@@ -235,3 +279,4 @@ function toggleMobileMenu() {
 
 // Sayfa ilk açıldığında verileri çekmeye başla
 window.onload = verileriGetir;
+
